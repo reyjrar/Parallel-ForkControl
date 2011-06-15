@@ -7,7 +7,9 @@ WriteMakefile(
     VERSION_FROM      => 'lib/Parallel/ForkControl.pm', # finds $VERSION
     PREREQ_PM         => { 
 							'Storable'	=> 0,
-							'POSIX'		=> 0
+							'POSIX'		=> 0,
+							'CHI'		=> 0,
+							'Try::Tiny'	=> 0,
 						}, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/Parallel/ForkControl.pm', # retrieve abstract from module

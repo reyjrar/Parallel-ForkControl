@@ -1,8 +1,10 @@
 ----
 name: Parallel::ForkControl
-version: 0.04
+version: 0.5
 license: perl
 distribution_type: module
 requires:
   Storable: 0
   POSIX: 0
+  Try::Tiny: 0
+  CHI: 0

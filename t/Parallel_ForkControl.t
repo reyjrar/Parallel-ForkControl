@@ -48,7 +48,7 @@ if( !defined $obj ) {
 #
 # list of all public and private methods
 #
-can_ok($obj, qw/_attributes _default _can _kidstarted _kidstopped kids kid_time _pid new _overLoad _tooManyKids _check run cleanup _REAPER _parentAlive _print_me _dbmsg/);
+can_ok($obj, qw/_attributes _default _can _kidstarted _kidstopped kids kid_time _pid new _overLoad _tooManyKids _check run waitforkids get_results clear_results _REAPER _parentAlive _print_me _dbmsg/);
 
 # ====> !!!! DO NOT ERASE THIS LINE !!!! <==== #
 
@@ -67,7 +67,8 @@ $obj = new Parallel::ForkControl(
 		MaxKids		=> 10,
 		ProcessTimeout => 5,
 		Accounting	=> 1,
-		Code		=> sub { my $n = shift; print "$$ - $n\n"; sleep $n; },
+		TrackArgs	=> 1,
+		Code		=> sub { my $n = shift; sleep $n; return 1; },
 		Debug		=> 0
 );
 
@@ -79,9 +80,29 @@ while($FORKS--) {
 	my $t = $FORKS % 2 ? 2 : 3;
 	ok($obj->run($t), "run");
 }
-ok($obj->cleanup(), "cleanup");
+ok($obj->waitforkids(), "waitforkids");
 
-my $altsub = sub { my $n = int(rand(6))+1; print "ALT $$ - $n\n"; sleep $n; };
-ok($obj->run($altsub), 'run alt sub');
+my $altsub = sub { my $n = int(rand(3))+1; sleep $n; return 1; };
+$obj->set_code( $altsub );
+ok($obj->run(), 'run alt sub');
 
+#Clean up for next test
+ok($obj->waitforkids(), "waitforkids");
+$obj->clear_results();
+
+# Test Results Caching
+$obj->set_code(  sub { my $n = shift; return $n; } );
+
+my %expected=();
+$FORKS = 4;
+while($FORKS--) {
+	my $key = $obj->run($FORKS);
+	$expected{$key} = $FORKS;
+}
+$obj->waitforkids();
+foreach my $kid (keys %expected) {
+	my $result = $obj->get_results($kid);
+	is( $result->{return}, $expected{$kid} );
+}
+$obj->clear_results();
 #-----------------------------------------------------------------------------#
