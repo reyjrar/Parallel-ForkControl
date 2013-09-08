@@ -14,4 +14,9 @@ WriteMakefile(
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/Parallel/ForkControl.pm', # retrieve abstract from module
        AUTHOR         => 'Brad Lhotsky <brad@divisionbyzero.net>') : ()),
+    META_MERGE        => {
+        resources => {
+            repository => 'https://github.com/reyjrar/Parallel-ForkControl',
+        },
+    },
 );
