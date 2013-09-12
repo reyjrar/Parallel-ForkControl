@@ -557,7 +557,7 @@ Parallel::ForkControl - Finer grained control of processes on a Unix System
 				Name			=> 'My Forker',
 				Code			=> \&mysub
 	);
-  my @hosts = qw/host1 host2 host3 host5 host5/;
+  my @hosts = qw/host1 host2 host3 host4 host5/;
 
   my $altSub = sub { my $t = shift; ... };
 
