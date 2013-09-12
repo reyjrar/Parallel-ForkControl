@@ -375,7 +375,7 @@ sub run {
 	# We might call _check();
 	$self->_check();
 
-	# wait for childern to die if we have too many
+	# wait for children to die if we have too many
 	if($self->get_method =~ /block/) {
 		$self->waitforkids() if $self->_tooManyKids;
 	}
